@@ -1,0 +1,35 @@
+---
+driver:
+  name: vagrant
+  network:
+  - ["forwarded_port", {guest: 80, host: 80}]
+  - ["forwarded_port", {guest: 443, host: 443}]
+  customize:
+    memory: 4000
+    cpus: 4
+
+transport:
+  max_ssh_sessions: 4
+    
+platforms:
+  - name: ubuntu-16.04 
+  #- name: centos/7
+  #- name: debian-8.8
+  #- name: debian-9.1
+  
+provisioner:
+  name: ansible_playbook
+  roles_path: ../
+  hosts: 
+    - web
+  playbook: default.yml
+  require_ansible_repo: true
+  ansible_verbose: true
+  ansible_version: latest
+  require_chef_for_busser: false
+  #ansible_connection: winrm
+  #require_windows_support: true
+  requirements_path: requirements.yml
+
+suites:
+ - name: default

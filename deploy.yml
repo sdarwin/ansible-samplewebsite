@@ -1,0 +1,6 @@
+---
+- hosts: web
+  remote_user: webdeploy
+  roles:
+    - { role: 'sdarwin.samplewebsite', run_deploy: true }
+ 

@@ -1,0 +1,26 @@
+---
+- name: create wpdeploy user
+  user: name="{{ wordpress_deploy_user }}" shell=/bin/bash
+
+- name: allow access to wpdeploy for team members
+  authorized_key: user="{{ wordpress_deploy_user }}"
+                  key="{{ item }}"
+  with_items: "{{ wordpress_ssh_public_keys }}"
+
+- name: configure sudoers
+  lineinfile:   dest=/etc/sudoers.d/{{ wordpress_deploy_user }}
+                line="{{ wordpress_deploy_user }} ALL=(ALL) NOPASSWD:ALL"
+                mode=0440
+                state=present
+                create=yes
+                validate='visudo -cf %s'
+
+- name: create env vars file 
+  template: src=wordpress-env-vars.j2 dest=/home/{{ wordpress_deploy_user }}/.wordpress-env-vars
+
+- name: include env vars in .profile
+  lineinfile:   dest=/home/{{ wordpress_deploy_user }}/.profile
+                line="if [ -f ~/.wordpress-env-vars ]; then . ~/.wordpress-env-vars; fi"
+                mode=0644
+                state=present
+                create=yes

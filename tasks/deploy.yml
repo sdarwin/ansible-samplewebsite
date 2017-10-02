@@ -1,0 +1,13 @@
+---
+- name: Create webpage folder
+  file:
+    path: /var/www/example.com
+    state: directory
+    mode: 0755
+    
+- name: Create example webpage
+  template: 
+    src: index.html.j2
+    dest: /var/www/example.com/index.html
+
+    

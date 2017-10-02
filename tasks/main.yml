@@ -1,0 +1,32 @@
+---
+# main tasks file for sample website role
+
+# Variables ##########
+
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}-family.yml"
+
+- name: Include Distribution version specific variables
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+- name: set facts based on defaults
+  set_fact:
+    "{{ item[8:] }}": "{{  vars[item[8:]] | default(vars[item]) }}"
+  when: item | match("^default_")
+  with_items:
+    "{{ vars }}"
+   
+# End Variables ##########
+
+- name: update packages
+  include: update_packages.yml
+  when: run_update_packages is defined 
+
+- name: deploy users
+  include: deploy_users.yml
+  when: run_deploy_users is defined 
+  
+- name: deploy web code
+  include: deploy.yml
+  when: run_deploy is defined 
+  

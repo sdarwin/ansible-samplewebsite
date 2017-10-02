@@ -1,0 +1,14 @@
+---
+- hosts: web
+  remote_user: ansible
+  become: yes
+  roles:
+    - { role: 'sdarwin.samplewebsite', run_update_packages: true }
+    - { role: 'geerlingguy.nginx' }
+
+- hosts: web
+  remote_user: ansible
+  become: yes
+  roles:
+    - { role: 'sdarwin.samplewebsite', run_deploy: true }
+ 

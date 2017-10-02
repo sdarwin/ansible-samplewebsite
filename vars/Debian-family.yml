@@ -1,0 +1,5 @@
+---
+default_website_packages_general:
+  - htop
+  - mlocate
+  - ssl-cert
